@@ -1,5 +1,4 @@
 #include <vector>
-#include <cstdio>
 #include "armComonent.h"
 #include "calculations.h"
 
