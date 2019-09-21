@@ -13,15 +13,17 @@ public:
 
     static double length(std::vector<double> target);
 
-    static double angle(const std::vector<double> &target1, const std::vector<double> &target2);
-
-    static double dist(std::vector<double> &from, std::vector<double> &to);
-
     static std::vector<double> normalize(std::vector<double> target);
 
     static double dotProduct(std::vector<double> target1, std::vector<double> target2);
 
     static std::vector<double> crossProduct(std::vector<double> target1, std::vector<double> target2);
+
+    static double angle(const std::vector<double>& target1, const std::vector<double>& target2);
+
+    static double dist(std::vector<double> from, std::vector<double> to);
+
+    static double getError(double curEndX, double curEndY, double targetX, double targetY);
 };
 
 

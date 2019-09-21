@@ -1,6 +1,7 @@
 #ifndef REVKEN_ARM_H
 #define REVKEN_ARM_H
 
+#include <limits>
 #include "armComonent.h"
 #include "calculations.h"
 
@@ -11,18 +12,23 @@ private:
     static const int Y = 1;
     static const int Z = 2;
 
-    double cosAngle, turnAngle, turnDeg;
-    std::vector<double> rootPos, desiredEnd, crossResult,curVector,targetVector,curEnd;
-    int link, tries;
+    std::vector<double> mountPos,curVector,targetVector,curEnd;
 
-    const int EFFECTORS = 3;
-    const int MAX_IK_TRIES = 100; // TIMES THROUGH THE CCD LOOP
+    int tries = 0;
+
+    double error = std::numeric_limits<double >::max();
+
+    const int MAX_IK_TRIES = 10000; // TIMES THROUGH THE CCD LOOP
     const double IK_POS_THRESH = 1.0f; // THRESHOLD FOR SUCCESS
 
 public:
+    int currentSegment;
+
     std::vector<armComponent*> segments;
+
     arm();
-    void moveTo(std::vector<double > endPos);
+
+    void moveTo(std::vector<double> endPos, double errorMargin);
 };
 
 

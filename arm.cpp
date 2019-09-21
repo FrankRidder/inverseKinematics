@@ -4,31 +4,40 @@
 
 using namespace std;
 
-void arm::moveTo(vector<double> endPos) {
-    rootPos = {0.0f, 0.0f, 0.0f};
-    curEnd = {segments.back()->getX(), segments.back()->getY(), 0.0f};
-    desiredEnd = {endPos[X], endPos[Y], endPos[Z]};
+void arm::moveTo(vector<double> endPos, double errorMargin) {
+    currentSegment = (int) segments.size() - 1;
 
-    if (calculations::dist(curEnd, desiredEnd) > IK_POS_THRESH) {
-        curVector[X] = curEnd[X] - rootPos[X];
-        curVector[Y] = curEnd[Y] - rootPos[Y];
-        curVector[Z] = curEnd[Z] - rootPos[Z];
+    if (calculations::dist(curEnd, endPos) > IK_POS_THRESH) {
+        while (error > errorMargin) {
+            if (tries++ == MAX_IK_TRIES) {
+                printf("didnt'make it\n");
+                break;
+            }
 
-        targetVector[X] = endPos[X] - rootPos[X];
-        targetVector[Y] = endPos[Y] - rootPos[Y];
-        targetVector[Z] = endPos[Z];
+            while (currentSegment >= 0) {
+                mountPos = segments[currentSegment]->getMountPoint();
+                curEnd = {segments[currentSegment]->getX(), segments[currentSegment]->getY(), 0.0f};
 
-        calculations::normalize(targetVector);
-        calculations::normalize(curVector);
+                curVector[X] = curEnd[X] - mountPos[X];
+                curVector[Y] = curEnd[Y] - mountPos[Y];
+                curVector[Z] = curEnd[Z] - mountPos[Z];
 
-        cosAngle = calculations::angle(targetVector,curVector);
-        printf("angle %f \n", cosAngle);
+                targetVector[X] = endPos[X] - mountPos[X];
+                targetVector[Y] = endPos[Y] - mountPos[Y];
+                targetVector[Z] = endPos[Z];
 
-        if (cosAngle < 0.99999)
-        {
-            crossResult = calculations::crossProduct(targetVector, curVector);
-            printf("cross %f \n", crossResult[Z]);
+                segments[currentSegment]->changeAngle(curVector, targetVector);
+                currentSegment--;
+            }
+            currentSegment = (int) segments.size() - 1;
+            error = calculations::getError(segments[currentSegment]->getX(), segments[currentSegment]->getY(),
+                                           endPos[X], endPos[Y]);
+
         }
+        printf("Solved in %d tries\n", tries);
+        printf("Got to X:%f Y: %f\n", segments[Z]->getX(),segments[Z]->getY());
+        printf("Needed to get to to X:%f Y: %f\n", endPos[X],endPos[Y]);
+
 
     }
 
@@ -36,26 +45,19 @@ void arm::moveTo(vector<double> endPos) {
 
 
 arm::arm() {
-    auto *root = new armComponent(0.0f, 0.0f);
-    segments.emplace_back(root);
-    auto *one = new armComponent(root, 15.0f);
+    auto *one = new armComponent(15.0f , 90.0f);
     segments.push_back(one);
     auto *two = new armComponent(one, 18.0f);
     segments.push_back(two);
     auto *three = new armComponent(two, 16.0f);
     segments.push_back(three);
 
-    rootPos = {0,0,0};
-    desiredEnd = {0,0,0};
-    crossResult = {0,0,0};
-    curVector = {0,0,0};
-    targetVector = {0,0,0};
-    curEnd  = {0,0,0};
+    mountPos = {0, 0, 0};
+    curVector = {0, 0, 0};
+    targetVector = {0, 0, 0};
+    curEnd = {0, 0, 0};
 
-
-    link = 3;
-
-    tries = 0;
+    currentSegment = 0;
 
 
 }
