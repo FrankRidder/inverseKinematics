@@ -1,4 +1,5 @@
 #include <vector>
+#include <cstdio>
 #include "armComonent.h"
 #include "calculations.h"
 
@@ -9,18 +10,30 @@ armComponent::armComponent(armComponent *previousComponent, double l, double ang
     previous = previousComponent;
     L = l;
     this->angle = angle * (M_PI / 180);
+    this->x = getNewX();
+    this->y = getNewY();
+    this->z = 0.0f;
+    mountPoint = getNewMountPoint();
 }
 
 armComponent::armComponent(armComponent *previousComponent, double l) {
     previous = previousComponent;
     L = l;
-    angle = 90.0f * (M_PI / 180);
+    angle = 0.0f * (M_PI / 180);
+    this->x = getNewX();
+    this->y = getNewY();
+    this->z = 0.0f;
+    mountPoint = getNewMountPoint();
 }
 
 armComponent::armComponent(double l, double angle) {
     previous = nullptr;
     L = l;
     this->angle = angle * (M_PI / 180);
+    this->x = getNewX();
+    this->y = getNewY();
+    this->z = 0.0f;
+    mountPoint = getNewMountPoint();
 }
 
 double armComponent::getAngle() {
@@ -31,22 +44,41 @@ double armComponent::getAngle() {
 }
 
 double armComponent::getX() {
+    return this->x;
+}
+
+double armComponent::getNewX() {
     if (previous == nullptr) {
-        return (L * sin(angle));
+        x = (L * sin(angle));
+        return x;
 
     }
-    return previous->getX() + (L * sin(angle + previous->getAngle()));
+    x = (previous->getX() + (L * sin(angle + previous->getAngle())));
+    return x;
 }
 
 double armComponent::getY() {
-    if (previous == nullptr) {
-        return (L * cos(angle));
+    return this->y;
+}
 
+double armComponent::getNewY() {
+    if (previous == nullptr) {
+        y = (L * cos(angle));
+        return y;
     }
-    return previous->getY() + (L * cos(angle + previous->getAngle()));
+    y = (previous->getY() + (L * cos(angle + previous->getAngle())));
+    return y;
+}
+
+double armComponent::getZ() {
+    return this->z;
 }
 
 vector<double> armComponent::getMountPoint() {
+    return mountPoint;
+}
+
+vector<double> armComponent::getNewMountPoint() {
     if (previous == nullptr) {
         return {0, 0, 0};
     }
@@ -54,17 +86,24 @@ vector<double> armComponent::getMountPoint() {
 }
 
 void armComponent::changeAngle(const vector<double> &curVector, const vector<double> &targetVector) {
-    calculations::normalize(targetVector);
-    calculations::normalize(curVector);
-
     auto cosAngle = calculations::angle(targetVector, curVector);
 
     auto crossResult = calculations::crossProduct(targetVector, curVector);
-    if (crossResult[Z] > 0.0f) {
+
+//    if(cosAngle > 2.0f){
+//        cosAngle = 2.0f;
+//    }
+
+    printf("Angle = %f \n", cosAngle);
+
+    if (crossResult[2] < 0.0f) {
         angle -= cosAngle;
     } else {
         angle += cosAngle;
     }
+
+    this->x = getNewX();
+    this->y = getNewY();
 
 }
 

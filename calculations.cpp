@@ -23,23 +23,35 @@ double calculations::dotProduct(vector<double> target1, vector<double> target2) 
     return (target1[X] * target2[X] + target1[Y] * target2[Y] + target1[Z] * target2[Z]);
 }
 
-double calculations::angle(const vector<double>& target1, const vector<double>& target2) {
+double calculations::angle(const vector<double> &target1, const vector<double> &target2) {
 
     double product = dotProduct(target1, target2);
+
+    if (product < 0) {
+        product *= -1;
+    }
+
     double lenSqt = (length(target1) * length(target2));
+
     double toReturn;
+
     if (lenSqt == 0.0f) {
         toReturn = 0.0f;
     } else {
         toReturn = product / lenSqt;
     }
-    if (toReturn < -1.0f) toReturn = -1.0f;
-    if (toReturn > 1.0f) toReturn = 1.0f;
+
+    if (toReturn < -1.0f) {
+        toReturn = -1.0f;
+    } else if (toReturn > 1.0f) {
+        toReturn = 1.0f;
+    }
+
     return acos(toReturn);
 }
 
 double calculations::length(vector<double> target) {
-    double leng = (target[X]*target[X] + target[Y]*target[Y]);
+    double leng = (target[X] * target[X] + target[Y] * target[Y] + target[Z] * target[Z]);
     if (leng < 0.0f) { return 0.0f; }
     return sqrt(leng);
 

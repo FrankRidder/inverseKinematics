@@ -12,13 +12,13 @@ private:
     static const int Y = 1;
     static const int Z = 2;
 
-    std::vector<double> mountPos,curVector,targetVector,curEnd;
+    std::vector<double> curVector,targetVector,curEnd;
 
     int tries = 0;
 
     double error = std::numeric_limits<double >::max();
 
-    const int MAX_IK_TRIES = 10000; // TIMES THROUGH THE CCD LOOP
+    const int MAX_IK_TRIES = 100; // TIMES THROUGH THE CCD LOOP
     const double IK_POS_THRESH = 1.0f; // THRESHOLD FOR SUCCESS
 
 public:
@@ -28,7 +28,7 @@ public:
 
     arm();
 
-    void moveTo(std::vector<double> endPos, double errorMargin);
+    void moveTo(std::vector<double> endPos);
 };
 
 
