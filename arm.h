@@ -18,7 +18,7 @@ private:
 
     double error = std::numeric_limits<double >::max();
 
-    const int MAX_IK_TRIES = 100; // TIMES THROUGH THE CCD LOOP
+    const int MAX_IK_TRIES = 10000; // TIMES THROUGH THE CCD LOOP
     const double IK_POS_THRESH = 1.0f; // THRESHOLD FOR SUCCESS
 
 public:

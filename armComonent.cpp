@@ -49,7 +49,7 @@ double armComponent::getX() {
 
 double armComponent::getNewX() {
     if (previous == nullptr) {
-        x = (L * sin(angle));
+        x = (L * cos(angle));
         return x;
 
     }
@@ -63,7 +63,7 @@ double armComponent::getY() {
 
 double armComponent::getNewY() {
     if (previous == nullptr) {
-        y = (L * cos(angle));
+        y = (L * sin(angle));
         return y;
     }
     y = (previous->getY() + (L * cos(angle + previous->getAngle())));
@@ -90,9 +90,9 @@ void armComponent::changeAngle(const vector<double> &curVector, const vector<dou
 
     auto crossResult = calculations::crossProduct(targetVector, curVector);
 
-//    if(cosAngle > 2.0f){
-//        cosAngle = 2.0f;
-//    }
+    if(cosAngle > 2.0f){
+        cosAngle = 2.0f;
+    }
 
     printf("Angle = %f \n", cosAngle);
 

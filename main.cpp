@@ -7,7 +7,7 @@ int main() {
 
     arm arm;
 
-    vector<double> endpos = {15, 15, 0};
+    vector<double> endpos = {45, 15, 0};
 
     arm.moveTo(endpos);
 
