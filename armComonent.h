@@ -3,31 +3,26 @@
 
 class armComponent {
 private:
-    double L;
+    double L, angle;
 
-    armComponent* previous = nullptr;
+    armComponent *previous = nullptr;
 
-    static const int X = 0;
-    static const int Y = 1;
-    static const int Z = 2;
+    double getAngle();
+
 public:
-    double angle;
+    void changeAngle(const std::vector<double> &curVector, const std::vector<double> &targetVector, double demping);
 
-    armComponent(armComponent* previousComponent, double l, double angle);
+    armComponent(armComponent *previousComponent, double l, double angle);
 
     armComponent(double l, double angle);
 
-    armComponent(armComponent* previousComponent, double l);
-
-    double getAngle();
+    armComponent(armComponent *previousComponent, double l);
 
     double getX();
 
     double getY();
 
     std::vector<double> getMountPoint();
-
-    void changeAngle(const std::vector<double>& curVector, const std::vector<double>& targetVector);
 };
 
 #endif //REVKEN_ARMCOMONENT_H

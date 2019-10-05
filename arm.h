@@ -12,24 +12,22 @@ private:
     static const int Y = 1;
     static const int Z = 2;
 
-    std::vector<double> mountPos,curVector,targetVector,curEnd;
+    std::vector<double> curVector, targetVector, curEnd;
+
+    int lastSegment, currentSegment;
 
     int tries = 0;
 
-    double error = std::numeric_limits<double >::max();
+    double error = std::numeric_limits<double>::max();
 
-    const int MAX_IK_TRIES = 10000; // TIMES THROUGH THE CCD LOOP
-    const double IK_POS_THRESH = 1.0f; // THRESHOLD FOR SUCCESS
+    const int MAX_IK_TRIES = 1000;
+
+    std::vector<armComponent *> segments;
 
 public:
-    int currentSegment;
-
-    std::vector<armComponent*> segments;
-
     arm();
 
-    void moveTo(std::vector<double> endPos, double errorMargin);
+    void moveTo(std::vector<double> endPos, double constraint, double errorMargin);
 };
-
 
 #endif //REVKEN_ARM_H
