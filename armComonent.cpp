@@ -66,6 +66,13 @@ void armComponent::changeAngle(const vector<double> &curVector, const vector<dou
     } else {
         angle += cosAngle;
     }
+
+    if(angle < M_PI * -1){
+        angle = M_PI * -1;
+    }else if (angle > M_PI){
+        angle = M_PI;
+
+    }
 }
 
 
